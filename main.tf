@@ -1,9 +1,3 @@
-provider "aws" {
-  region                   = "us-west-1"
-#   shared_credentials_files = ["~/.aws/credentials"]
-  profile                  = "tfuser"
-}
-
 resource "aws_instance" "vm1" {
   ami                    = "ami-0cbe318e714fc9a82"
   availability_zone      = "us-west-1"
