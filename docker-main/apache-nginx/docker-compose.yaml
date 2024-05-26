@@ -1,0 +1,12 @@
+services:
+  http:
+    image: apache_web:v1
+    container_name: apache_server1
+    ports:
+      - "8080:80"
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana_server1
+    ports:
+      - "6969:3000"
