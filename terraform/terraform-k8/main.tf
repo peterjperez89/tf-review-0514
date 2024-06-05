@@ -39,6 +39,7 @@ resource "aws_internet_gateway" "tfig" {
   }
 }
 
+//route tables
 resource "aws_route_table" "tfrt" {
   vpc_id = aws_vpc.tfvpc.id
   route {
@@ -68,31 +69,17 @@ resource "aws_security_group" "tfsg" {
   vpc_id      = aws_vpc.tfvpc.id
 
   ingress {
-    description = "https"
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  ingress {
-    description = "http"
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  ingress {
-    description = "ssh"
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
+    description = "ALL"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
   egress {
     description = "ALL"
     from_port   = 0
     to_port     = 0
-    protocol    = -1
+    protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
@@ -161,9 +148,16 @@ resource "aws_eks_cluster" "tfcluster" {
       aws_subnet.tfsub2.id
     ]
     endpoint_public_access = true
-    security_group_ids     = [aws_security_group.tfsg.id]
+    security_group_ids     = [aws_security_group.tfsg.id] #note: this does not give our nodes a security group! you need to assign a launch template to the nodegroup
   }
   depends_on = [aws_iam_role_policy_attachment.tfpolicyattach1]
+}
+
+resource "aws_launch_template" "cluster_lt" {
+  name = "cluster_lt"
+  vpc_security_group_ids = [ aws_security_group.tfsg.id ]
+  
+  depends_on = [ aws_security_group.tfsg ]
 }
 
 resource "aws_eks_node_group" "tfnodegroup" {
@@ -173,6 +167,10 @@ resource "aws_eks_node_group" "tfnodegroup" {
   ami_type        = "AL2_x86_64"
   instance_types  = ["t2.micro"]
   node_group_name = "tfnodegroup"
+  launch_template {
+    id = aws_launch_template.cluster_lt.id
+    version = aws_launch_template.cluster_lt.latest_version
+  }
   scaling_config {
     desired_size = 4
     max_size     = 4
@@ -181,6 +179,7 @@ resource "aws_eks_node_group" "tfnodegroup" {
   depends_on = [
     aws_iam_role_policy_attachment.tfpolicyattach2,
     aws_iam_role_policy_attachment.tfpolicyattach3,
-    aws_iam_role_policy_attachment.tfpolicyattach4
+    aws_iam_role_policy_attachment.tfpolicyattach4, 
+    aws_launch_template.cluster_lt
   ]
 }
