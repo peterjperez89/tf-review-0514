@@ -1,0 +1,29 @@
+services:
+  grafana:
+    build:
+      context: ./grafana
+      #image: nginx:latest
+    container_name: mygrafana
+    ports:
+      - "3130:3000"
+
+  httpd:
+    build:
+      context: ./web/httpd
+      #image: grafana/grafana:latest
+    container_name: my-http
+    ports:
+      - "8095:80"
+    volumes:
+      - ./web/test:/var/www/html
+
+  splunk:
+    build:
+      context: ./splunk
+      #image: splunk/splunk:latest
+    container_name: mysplunk
+    ports:
+      - "8100:8000"
+    # environment:
+    #   - SPLUNK_START_ARGS=--accept-license
+    #   - SPLUNK_PASSWORD="splunk123"
