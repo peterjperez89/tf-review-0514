@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: apache-webapp
+  labels:
+    app: apache-webapp
+spec:
+  containers:
+  - name: apache-webapp
+    image: httpd:latest
+    ports:
+    - containerPort: 80
+
+    # Instructions to run:
+    # alias k8=kubectl
+    # k8 apply -f apache-pod.yaml
+
+    # k8 exec -it apache-webapp -- /bin/bash
+    # 
+    # apt-get install curl
+    # curl localhost

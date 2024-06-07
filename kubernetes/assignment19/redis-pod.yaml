@@ -1,0 +1,20 @@
+# create namespace first
+# kubectl create namespace cache
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: redis
+  namespace: cache
+  labels:
+    app: redis
+spec:
+  containers:
+  - name: redis
+    image: redis:latest
+    ports:
+    - containerPort: 6379
+  
+  #to run
+  #k8 apply -f redis-pod.yaml
+  #k8 get pods -n cache

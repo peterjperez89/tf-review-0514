@@ -1,0 +1,28 @@
+#k8 create namespace web-apps
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  namespace: web-apps
+  labels:
+    app: nginx
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      name: nginx
+  template:
+    metadata:
+      labels:
+        name: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+
+#k8 apply -f nginx-deployment.yaml
+#k8 get pods -n web-apps
+#k8 get deployments -n web-apps
