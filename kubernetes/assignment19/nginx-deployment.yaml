@@ -2,26 +2,30 @@
 
 apiVersion: apps/v1
 kind: Deployment
-metadata:
+metadata: #data of your deployment
   name: nginx-deployment
-  namespace: web-apps
-  labels:
-    app: nginx
-spec:
-  replicas: 3
-  selector:
-    matchLabels:
-      name: nginx
+  namespace: web-apps #namespace of your deployment (see line 1)
+  labels: #labels of your deployment
+    type: deployment #key:value pair
+spec: #specs for the pods deployed
   template:
     metadata:
       labels:
-        name: nginx
+        pod: nginx #key:value for your pod
     spec:
       containers:
       - name: nginx
-        image: nginx:latest
+        image: nginx:latest #specifies the docker image:tag
         ports:
-        - containerPort: 80
+        - containerPort: 80 #listens on port 80
+      # - name: grafana
+      #   image: grafana/grafana:latest
+      #   ports:
+      #   - containerPort: 3000
+  replicas: 2
+  selector:
+    matchLabels:
+      pod: nginx #should match the label (key:value) for your pod
 
 #k8 apply -f nginx-deployment.yaml
 #k8 get pods -n web-apps

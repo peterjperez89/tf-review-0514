@@ -1,21 +1,24 @@
+#kubectl get nodes
+#kubectl label nodes <node1> (key:value)
+
 apiVersion: apps/v1
-kind: DaemonSet
+kind: DaemonSet #deploys a singluar pod on every single worker node that is running
 metadata:
   name: grafana
   namespace: grafana
   labels:
     app: grafana
-spec:
-  selector:
+spec: #spec for DaemonSet
+  selector: #selects the pods with the matching labels
     matchLabels:
       app: grafana
-  template:
+  template: #template of the pod
     metadata:
       labels:
         app: grafana
-    spec:
-      nodeSelector:
-        grafana: running
+    spec: #spec for pod
+      nodeSelector: #chooses the node where the pod will be deployed
+        grafana: running #label for the node to be chosen, match line 2 comment
       containers:
       - name: grafana
         image: grafana/grafana:latest
