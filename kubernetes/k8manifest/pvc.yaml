@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: web-pvc
+  namespace: webns
+spec:
+  storageClassName: manual #match the pv.yaml
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 8Gi #requests 8Gi of storage from our persistent volume

@@ -5,7 +5,7 @@ metadata:
   namespace: web
   labels: #could be any label
     type: deployment
-spec:
+spec: #specification of the pods
   replicas: 2 #how many pods to create
   selector:
     matchLabels: #manage pods with nginx resources
@@ -13,7 +13,7 @@ spec:
   template: #what pod we are creating, ex: nginx
     metadata:
       labels:
-        app: nginx
+        app: nginx #label of pods
     spec: #specs for containers to execute in the pod
       containers:
       - name: nginx-container

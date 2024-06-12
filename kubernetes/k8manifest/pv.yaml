@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: web-pv
+spec:
+  capacity:
+    storage: 8Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce #specifies the access mode allowing read/write access by a single node. Another option is ReadWriteMany which gives read/write access by multiple nodes.
+  persistentVolumeReclaimPolicy: Retain #retains the volume after the pvc is deleted
+  storageClassName: manual
+  awsElasticBlockStore:
+    volumeID: vol-015dce14601fac35a #this needs to be a prexisting EBS volume
+    fsType: xfs
