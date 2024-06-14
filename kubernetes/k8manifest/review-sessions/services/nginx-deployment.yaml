@@ -15,12 +15,17 @@ spec: #specification of the pods
       labels:
         app: nginx #label of pods
     spec: #specs for containers to execute in the pod
+      nodeSelector:
+        topology.kubernetes.io/zone: us-west-1c
       containers:
       - name: nginx-container
         image: nginx:latest
-        resources:
-          limits:
-            memory: "128Mi" #megabytes, how much memory space to add
-            cpu: "250m" #how much cpy memory to add
         ports:
         - containerPort: 80
+        volumeMounts:
+        - name: nginx-pv
+          mountPath: /usr/share/nginx/html/ #path that your volume will be mounted to
+      volumes:
+      - name: nginx-pv #can be anything
+        persistentVolumeClaim:
+          claimName: nginx-pvc #must match the pvc

@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: PersistentVolumeClaim 
+metadata:
+  name: nginx-pvc
+  namespace: web #pvc must have a namespaced defined
+spec:
+  storageClassName: "manual" #matches the name in the pv file
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+#if you cannot delete a pv
+#kubectl patch persistentvolume example-pv -p '{"metadata":{"finalizers":[]}}' --type=merge
+#kubectl patch persistentvolumeclaim example-pvc -p '{"metadata":{"finalizers":[]}}' --type=merge

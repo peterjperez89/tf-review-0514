@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nginx-pv
+spec:
+  storageClassName: "manual" #can be whatever
+  capacity:
+    storage: 5Gi
+  accessModes:
+  - ReadWriteOnce #one node at a time can read/write on this pv, ReadWriteMany means any node can use this pv.
+  persistentVolumeReclaimPolicy: Retain #if your pod of pvc gets destroyed/deleted, the data will be retained
+  awsElasticBlockStore: #defines the ebs volume
+    volumeID: vol-080ee63dba6a44cec #created ebs volume in terraform. see output or go to ec2 console ebs
+    fsType: xfs

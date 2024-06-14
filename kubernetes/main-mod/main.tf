@@ -23,3 +23,15 @@ module "eks" {
   ltver      = module.lt-sg.ltver
   depends_on = [module.lt-sg]
 }
+
+# Create an EBS volume
+resource "aws_ebs_volume" "example" {
+  availability_zone = "us-west-1c"
+  size              = 5
+  tags = {
+    Name = "example-ebs-volume"
+  }
+}
+output "volume_id" {
+  value = aws_ebs_volume.example.id
+}

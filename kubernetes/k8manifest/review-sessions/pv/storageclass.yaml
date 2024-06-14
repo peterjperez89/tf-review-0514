@@ -1,0 +1,9 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: nginx-sc
+provisioner: ebs.csi.aws.com #the csi driver creates the EBS volume (after you create the volume utilizing the pvc)
+parameters:
+  type: gp2
+  fsType: xfs
+volumeBindingMode: WaitForFirstConsumer #provisioner will not mount the volume until the pod is being used by the pvc
