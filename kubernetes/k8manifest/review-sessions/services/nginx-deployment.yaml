@@ -22,10 +22,35 @@ spec: #specification of the pods
         image: nginx:latest
         ports:
         - containerPort: 80
-        volumeMounts:
-        - name: nginx-pv
-          mountPath: /usr/share/nginx/html/ #path that your volume will be mounted to
-      volumes:
-      - name: nginx-pv #can be anything
-        persistentVolumeClaim:
-          claimName: nginx-pvc #must match the pvc
+        livenessProbe: 
+          exec: #allows you to run commands
+            command:
+            - /bin/bash
+            - -c 
+            - curl -f http://localhost/ || exit 1 #if nginx is working, it will go through, but if it fails, it will print exit code 1
+          initialDelaySeconds: 30 #waits to run commands until 30 seconds after the container starts running
+          periodSeconds: 10 #runs this command every 10 seconds after the initial delay
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          exec:
+            command: 
+            - touch
+            - /tmp/readiness
+          initialDelaySeconds: 30
+          periodSeconds: 10
+
+
+
+      ##   ports:
+      #   volumeMounts:
+      #   - name: nginx-pv
+      #     mountPath: /usr/share/nginx/html/ #path that your volume will be mounted to
+      # volumes:
+      # - name: nginx-pv #can be anything
+      #   persistentVolumeClaim:
+      #     claimName: nginx-pvc #must match the pvc
